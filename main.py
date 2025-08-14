@@ -1,5 +1,3 @@
-import os
-
 import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
@@ -15,9 +13,10 @@ class Data(BaseModel):
     fnlgt: int = Field(..., example=178356)
     education: str = Field(..., example="HS-grad")
     education_num: int = Field(..., example=10, alias="education-num")
-    marital_status: str = Field(
-        ..., example="Married-civ-spouse", alias="marital-status"
-    )
+    marital_status: str = Field(...,
+                                example="Married-civ-spouse",
+                                alias="marital-status"
+                                )
     occupation: str = Field(..., example="Prof-specialty")
     relationship: str = Field(..., example="Husband")
     race: str = Field(..., example="White")
@@ -25,24 +24,25 @@ class Data(BaseModel):
     capital_gain: int = Field(..., example=0, alias="capital-gain")
     capital_loss: int = Field(..., example=0, alias="capital-loss")
     hours_per_week: int = Field(..., example=40, alias="hours-per-week")
-    native_country: str = Field(..., example="United-States", alias="native-country")
+    native_country: str = Field(..., example="United-States",
+                                alias="native-country"
+                                )
 
 
-path = './model/encoder.pkl'  # TODO: enter the path for the saved encoder
+path = './model/encoder.pkl'
 encoder = load_model(path)
 
-path = './model/model.pkl'  # TODO: enter the path for the saved model
+path = './model/model.pkl'
 model = load_model(path)
 
-# TODO: create a RESTful API using FastAPI
+# create a RESTful API using FastAPI
 app = FastAPI()  # your code here
 
 
-# TODO: create a GET on the root giving a welcome message
+# create a GET on the root giving a welcome message
 @app.get("/")
 async def get_root():
     """Say hello!"""
-    # your code here
     return {"Hello": "World"}
 
 
@@ -50,9 +50,9 @@ async def get_root():
 @app.post("/data/")
 async def post_inference(data: Data):
     # DO NOT MODIFY: turn the Pydantic model into a dict.
-    data_dict = data.model_dump() # dict()
+    data_dict = data.dict()
     # DO NOT MODIFY: clean up the dict to turn it into a Pandas DataFrame.
-    # The data has names with hyphens and Python does not allow those as variable names.
+    # The data has names with hyphens
     # Here it uses the functionality of FastAPI/Pydantic/etc to deal with this.
     data = {k.replace("_", "-"): [v] for k, v in data_dict.items()}
     data = pd.DataFrame.from_dict(data)
@@ -73,10 +73,10 @@ async def post_inference(data: Data):
         # use training = False
         # do not need to pass lb as input
         data,
-        categorical_features = cat_features,
-        label = 'salary',
-        training = False,
-        encoder = encoder
+        categorical_features=cat_features,
+        label=None,
+        training=False,
+        encoder=encoder
     )
-    _inference = inference(model, data_processed)  # your code here to predict the result using data_processed
+    _inference = inference(model, data_processed)
     return {"result": apply_label(_inference)}

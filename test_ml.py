@@ -1,4 +1,3 @@
-import pytest
 import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -8,8 +7,6 @@ from ml.data import process_data
 from ml.model import (
     inference,
     load_model,
-    save_model,
-    train_model,
 )
 
 project_path = r"C:\temp\Deploying-a-Scalable-ML-Pipeline-with-FastAPI"
