@@ -9,7 +9,7 @@ from ml.model import (
     load_model,
 )
 
-project_path = r"C:\temp\Deploying-a-Scalable-ML-Pipeline-with-FastAPI"
+project_path = r"./"
 data_path = os.path.join(project_path, "data", "census.csv")
 data = pd.read_csv(data_path)
 
